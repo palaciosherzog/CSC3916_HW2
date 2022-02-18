@@ -23,19 +23,20 @@ app.use(passport.initialize());
 
 var router = express.Router();
 
-function getJSONObjectForMovieRequirement(req) {
+function getJSONObjectForMovieRequirement(req, msg) {
     var json = {
+        message: msg,
         headers: "No headers",
-        key: process.env.UNIQUE_KEY,
-        body: "No body"
+        query: "No query strings",
+        env: process.env.UNIQUE_KEY
     };
-
-    if (req.body != null) {
-        json.body = req.body;
-    }
 
     if (req.headers != null) {
         json.headers = req.headers;
+    }
+
+    if (req.query != null) {
+        json.query = req.query;
     }
 
     return json;
@@ -72,7 +73,23 @@ router.post('/signin', function (req, res) {
     }
 });
 
-router.route('/testcollection')
+router.get('/movies', function(req, res) {
+    res.status(200).send(getJSONObjectForMovieRequirement(req, 'GET movies'));
+});
+
+router.post('/movies', function(req, res) {
+    res.status(200).send(getJSONObjectForMovieRequirement(req, 'movie saved'));
+});
+
+router.route('/movies')
+    .put(authJwtController.isAuthenticated, function(req, res) {
+        res.status(200).send(getJSONObjectForMovieRequirement(req, 'movie updated'));
+    })
+    .delete(authController.isAuthenticated, function(req, res) {
+        res.status(200).send(getJSONObjectForMovieRequirement(req, 'movie deleted'));
+    });
+
+/*router.route('/testcollection')
     .delete(authController.isAuthenticated, function(req, res) {
         console.log(req.body);
         res = res.status(200);
@@ -92,7 +109,7 @@ router.route('/testcollection')
         var o = getJSONObjectForMovieRequirement(req);
         res.json(o);
     }
-    );
+    );*/
 
 app.use('/', router);
 app.listen(process.env.PORT || 8080);
