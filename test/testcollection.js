@@ -9,7 +9,6 @@ chai.should();
 chai.use(chaiHttp);
 
 let login_details = {
-    name: 'test',
     username: 'email@email.com',
     password: '123@abc'
 }
@@ -26,7 +25,7 @@ describe('Register, Login and Call Test Collection with Basic Auth and JWT Auth'
     })
 
     //Test the GET route
-    describe('/signup', () => {
+    describe('/signup and /signin and put /movies', () => {
         it('it should register, login and check our token', (done) => {
           chai.request(server)
               .post('/signup')
@@ -46,12 +45,11 @@ describe('Register, Login and Call Test Collection with Basic Auth and JWT Auth'
                         //console.log('got token ' + token)
                         //lets call a protected API
                         chai.request(server)
-                            .put('/testcollection')
+                            .put('/movies')
                             .set('Authorization', token)
                             .send({echo: ''})
                             .end((err, res) => {
                                 res.should.have.status(200);
-                                res.body.body.should.have.property('echo');
                                 done();
                             })
                     })
@@ -59,16 +57,29 @@ describe('Register, Login and Call Test Collection with Basic Auth and JWT Auth'
         })
     });
 
-   describe('/testcollection fail auth', () => {
-      it('delete requires basic auth failed login', (done) => {
+   describe('/movies success auth', () => {
+      it('delete requires basic auth success', (done) => {
           chai.request(server)
-              .delete('/testcollection')
-              .auth('cu_user', 'cu_rulez1')
+              .delete('/movies')
+              .auth('user', 'asecurepassword')
               .send({ echo: '' })
               .end((err, res) => {
-                  res.should.have.status(401);
+                  res.should.have.status(200);
                   done();
               })
       });
    });
+   
+   describe('/movies fail auth', () => {
+    it('delete requires basic auth fail', (done) => {
+        chai.request(server)
+            .delete('/movies')
+            .auth('cu_user', 'asecurepassword')
+            .send({ echo: '' })
+            .end((err, res) => {
+                res.should.have.status(401);
+                done();
+            })
+    });
+ });
 });
