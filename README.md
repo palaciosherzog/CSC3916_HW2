@@ -1,1 +1,3 @@
 # CSC3916_HW2
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/0599a926f63e24d7eb9a?action=collection%2Fimport#?env%5BHW2%5D=W3sia2V5IjoidG9rZW4iLCJ2YWx1ZSI6IiIsImVuYWJsZWQiOnRydWUsInR5cGUiOiJhbnkiLCJzZXNzaW9uVmFsdWUiOiJicmVha0pXVCBleUpoYkdjaU9pSklVekkxTmlJc0luUjVjQ0k2SWtwWFZDSjkuZXlKcFlYUWlPakUyTkRVeU5ESTVOak45LnFGUzBRdzFNd0g2bGFVeWE2TnB0QjZLVUI4ZGk2eWttNktNQ2RrSGVKT0EiLCJzZXNzaW9uSW5kZXgiOjB9XQ==)

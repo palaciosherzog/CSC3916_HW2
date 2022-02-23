@@ -1,7 +1,7 @@
 /*
 CSC3916 HW2
 File: Server.js
-Description: Web API scaffolding for Movie API
+Description: Movie API scaffolding filled out with additional functionality
  */
 
 var express = require('express');
@@ -42,9 +42,9 @@ function getJSONObjectForMovieRequirement(req, msg) {
     return json;
 }
 
-router.post('/signup', function(req, res) {
+router.post('/signup', function (req, res) {
     if (!req.body.username || !req.body.password) {
-        res.json({success: false, msg: 'Please include both username and password to signup.'})
+        res.json({ success: false, msg: 'Please include both username and password to signup.' })
     } else {
         var newUser = {
             username: req.body.username,
@@ -52,7 +52,7 @@ router.post('/signup', function(req, res) {
         };
 
         db.save(newUser); //no duplicate checking
-        res.json({success: true, msg: 'Successfully created new user.'})
+        res.json({ success: true, msg: 'Successfully created new user.' })
     }
 });
 
@@ -60,32 +60,32 @@ router.post('/signin', function (req, res) {
     var user = db.findOne(req.body.username);
 
     if (!user) {
-        res.status(401).send({success: false, msg: 'Authentication failed. User not found.'});
+        res.status(401).send({ success: false, msg: 'Authentication failed. User not found.' });
     } else {
         if (req.body.password == user.password) {
             var userToken = { id: user.id, username: user.username };
             var token = jwt.sign(userToken, process.env.SECRET_KEY);
-            res.json ({success: true, token: 'JWT ' + token});
+            res.json({ success: true, token: 'JWT ' + token });
         }
         else {
-            res.status(401).send({success: false, msg: 'Authentication failed.'});
+            res.status(401).send({ success: false, msg: 'Authentication failed.' });
         }
     }
 });
 
-router.get('/movies', function(req, res) {
+router.get('/movies', function (req, res) {
     res.status(200).send(getJSONObjectForMovieRequirement(req, 'GET movies'));
 });
 
-router.post('/movies', function(req, res) {
+router.post('/movies', function (req, res) {
     res.status(200).send(getJSONObjectForMovieRequirement(req, 'movie saved'));
 });
 
 router.route('/movies')
-    .put(authJwtController.isAuthenticated, function(req, res) {
+    .put(authJwtController.isAuthenticated, function (req, res) {
         res.status(200).send(getJSONObjectForMovieRequirement(req, 'movie updated'));
     })
-    .delete(authController.isAuthenticated, function(req, res) {
+    .delete(authController.isAuthenticated, function (req, res) {
         res.status(200).send(getJSONObjectForMovieRequirement(req, 'movie deleted'));
     });
 
@@ -111,12 +111,13 @@ router.route('/movies')
     }
     );*/
 
-app.use(function(req, res) {
+app.use('/', router);
+
+app.use(function (req, res) {
     res.status(405).send("Method not allowed");
 });
 
-app.use('/', router);
 app.listen(process.env.PORT || 8080);
-//module.exports = app; // for testing only
+module.exports = app; // for testing only
 
 
