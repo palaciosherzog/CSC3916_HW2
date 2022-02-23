@@ -118,6 +118,6 @@ app.use(function (req, res) {
 });
 
 app.listen(process.env.PORT || 8080);
-module.exports = app; // for testing only
+//module.exports = app; // for testing only
 
 
